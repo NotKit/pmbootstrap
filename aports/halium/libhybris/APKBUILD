@@ -1,0 +1,63 @@
+pkgname=libhybris
+pkgver=115.b389ac4
+pkgrel=1
+arch="all"
+url="https://github.com/libhybris/libhybris"
+license="Apache"
+makedepends="autoconf automake libtool dbus-glib-dev wayland-dev linux-headers bsd-compat-headers android-headers-caf"
+_rev=1ba0a078314d1ddbc01a2caa71545c85e4e702bb
+source="$pkgname-$_rev.tar.gz::https://github.com/NotKit/libhybris/archive/$_rev.tar.gz"
+pkgdesc="libhybris allows to use bionic-based HW adaptations"
+subpackages="$pkgname-dev $pkgname-egl $pkgname-gles $pkgname-libwayland-egl:_wayland"
+
+builddir="$srcdir/libhybris-$_rev"
+
+build() {
+    cd "$builddir/hybris"
+
+    ./autogen.sh \
+        --prefix=/usr \
+        --enable-wayland \
+        --enable-trace \
+        --enable-debug \
+        --enable-experimental \
+        --with-android-headers=/usr/include/android \
+        --with-default-hybris-ld-library-path=/usr/libexec/droid-hybris:/system/lib:/vendor/lib:/system/lib \
+        --enable-property-cache
+    make
+}
+
+package() {
+    cd "$builddir/hybris"
+
+    make DESTDIR="${pkgdir}" install
+
+    # Avoid conflict with Mesa
+    # mv ${pkgdir}/usr/lib/lib*GL* ${pkgdir}/usr/lib/libhybris
+    rm -f ${pkgdir}/usr/lib/pkgconfig/egl.pc
+    rm -f ${pkgdir}/usr/lib/pkgconfig/glesv*.pc
+    rm -f ${pkgdir}/usr/lib/pkgconfig/wayland-egl.pc
+}
+
+egl() {
+    pkgdesc="libhybris libEGL runtime libraries"
+    install -d "$subpkgdir"/usr/lib
+    mv "$pkgdir"/usr/lib/libEGL.so* \
+        "$subpkgdir"/usr/lib/
+}
+
+gles() {
+    pkgdesc="libhybris libGLESv2 runtime libraries"
+    install -d "$subpkgdir"/usr/lib
+    mv "$pkgdir"/usr/lib/libGLES*.so* \
+        "$subpkgdir"/usr/lib/
+}
+
+_wayland() {
+	pkgdesc="libhybris libwayland-egl library"
+	mkdir -p "$subpkgdir"/usr/lib
+	mv "$pkgdir"/usr/lib/libwayland-egl.so.* "$subpkgdir"/usr/lib/ \
+		|| return 1
+}
+
+sha512sums="c4a330fe05253aab7dda34ca36ef5a77c20bc946accad52e2682f0f4a5170f555d5501d61299771821b5e475259c636d8895bb1972894787cefe66d2b60955c0  libhybris-1ba0a078314d1ddbc01a2caa71545c85e4e702bb.tar.gz"
