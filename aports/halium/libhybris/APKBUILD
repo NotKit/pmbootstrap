@@ -4,13 +4,13 @@ pkgrel=1
 arch="all"
 url="https://github.com/libhybris/libhybris"
 license="Apache"
-makedepends="autoconf automake libtool dbus-glib-dev wayland-dev linux-headers bsd-compat-headers android-headers-caf"
-_rev=1ba0a078314d1ddbc01a2caa71545c85e4e702bb
+makedepends="autoconf automake libtool wayland-dev linux-headers bsd-compat-headers android-headers-caf"
+_rev=013cf7e07e38d1f15e3cf82743533d496d5420b7
 source="$pkgname-$_rev.tar.gz::https://github.com/NotKit/libhybris/archive/$_rev.tar.gz"
 pkgdesc="libhybris allows to use bionic-based HW adaptations"
 subpackages="$pkgname-dev $pkgname-egl $pkgname-gles $pkgname-libwayland-egl:_wayland"
 
-builddir="$srcdir/libhybris-$_rev"
+builddir="$srcdir/$pkgname-$_rev"
 
 build() {
     cd "$builddir/hybris"
@@ -31,33 +31,47 @@ package() {
     cd "$builddir/hybris"
 
     make DESTDIR="${pkgdir}" install
-
-    # Avoid conflict with Mesa
-    # mv ${pkgdir}/usr/lib/lib*GL* ${pkgdir}/usr/lib/libhybris
-    rm -f ${pkgdir}/usr/lib/pkgconfig/egl.pc
-    rm -f ${pkgdir}/usr/lib/pkgconfig/glesv*.pc
-    rm -f ${pkgdir}/usr/lib/pkgconfig/wayland-egl.pc
 }
 
 egl() {
     pkgdesc="libhybris libEGL runtime libraries"
     install -d "$subpkgdir"/usr/lib
-    mv "$pkgdir"/usr/lib/libEGL.so* \
+    mv "$pkgdir"/usr/lib/libEGL.so.* \
         "$subpkgdir"/usr/lib/
 }
 
 gles() {
     pkgdesc="libhybris libGLESv2 runtime libraries"
     install -d "$subpkgdir"/usr/lib
-    mv "$pkgdir"/usr/lib/libGLES*.so* \
+    mv "$pkgdir"/usr/lib/libGLES*.so.* \
         "$subpkgdir"/usr/lib/
 }
 
 _wayland() {
-	pkgdesc="libhybris libwayland-egl library"
-	mkdir -p "$subpkgdir"/usr/lib
-	mv "$pkgdir"/usr/lib/libwayland-egl.so.* "$subpkgdir"/usr/lib/ \
-		|| return 1
+    pkgdesc="libhybris libwayland-egl library"
+    mkdir -p "$subpkgdir"/usr/lib
+    mv "$pkgdir"/usr/lib/libwayland-egl.so.* "$subpkgdir"/usr/lib/ \
+        || return 1
 }
 
-sha512sums="c4a330fe05253aab7dda34ca36ef5a77c20bc946accad52e2682f0f4a5170f555d5501d61299771821b5e475259c636d8895bb1972894787cefe66d2b60955c0  libhybris-1ba0a078314d1ddbc01a2caa71545c85e4e702bb.tar.gz"
+dev() {
+    default_dev
+
+    # Avoid conflicts with mesa-dev
+    rm -f "$subpkgdir"/usr/lib/lib*GL*.so
+    rm -f "$subpkgdir"/usr/lib/libwayland-egl.so
+
+    cd "$subpkgdir"/usr/lib/pkgconfig
+    rm -f egl.pc glesv*.pc wayland-egl.pc
+
+    cd "$subpkgdir"/usr/include
+    # Move libhybris-provided headers into hybris dir
+    mv CL EGL GLES GLES2 KHR VG hybris
+
+    # Symlink eglhybris.h
+    mkdir -p EGL
+    cd EGL
+    ln -s ../hybris/EGL/eglhybris.h .
+}
+
+sha512sums="b0b66efb3fa1c32ddf48477feeeb885c7919f7cb68b9173b6614103e0d88d7c6bf6893324e04b39d6c36b50020d07530c711c7b143eb8ab576f3efda919dc1c7  libhybris-013cf7e07e38d1f15e3cf82743533d496d5420b7.tar.gz"
