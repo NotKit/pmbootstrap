@@ -1,0 +1,79 @@
+diff --git a/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_cfg.c b/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_cfg.c
+index bea3d624..3b4b773b 100644
+--- a/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_cfg.c
++++ b/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_cfg.c
+@@ -4766,8 +4766,8 @@ static char *i_trim(char *str)
+ 
+    /* Find the first non white-space*/
+    for (ptr = str; i_isspace(*ptr); ptr++);
+-      if (*ptr == '\0')
+-         return str;
++   if (*ptr == '\0')
++      return str;
+ 
+    /* This is the new start of the string*/
+    str = ptr;
+@@ -4775,8 +4775,8 @@ static char *i_trim(char *str)
+    /* Find the last non white-space */
+    ptr += strlen(ptr) - 1;
+    for (; ptr != str && i_isspace(*ptr); ptr--);
+-      /* Null terminate the following character */
+-      ptr[1] = '\0';
++   /* Null terminate the following character */
++   ptr[1] = '\0';
+ 
+    return str;
+ }
+@@ -6649,12 +6649,12 @@ v_BOOL_t hdd_update_config_dat( hdd_context_t *pHddCtx )
+         hddLog(LOGE,"Failure: Could not pass on WNI_CFG_SINGLE_TID_RC configuration info to CCM");
+      }
+ 
+-     if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_TELE_BCN_WAKEUP_EN, pConfig->teleBcnWakeupEn,
++    if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_TELE_BCN_WAKEUP_EN, pConfig->teleBcnWakeupEn,
+                       NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
+-     {
++    {
+         fStatus = FALSE;
+         hddLog(LOGE,"Failure: Could not pass on WNI_CFG_TELE_BCN_WAKEUP_EN configuration info to CCM");
+-     }
++    }
+ 
+      if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_TELE_BCN_TRANS_LI, pConfig->nTeleBcnTransListenInterval,
+       NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
+diff --git a/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_main.c b/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_main.c
+index 05dd2513..3bc88221 100644
+--- a/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_main.c
++++ b/drivers/staging/qcacld-2.0/CORE/HDD/src/wlan_hdd_main.c
+@@ -10347,7 +10347,7 @@ static hdd_adapter_t* hdd_alloc_station_adapter(hdd_context_t *pHddCtx,
+          pWlanDev->features |= NETIF_F_HW_CSUM;
+       else if (pHddCtx->cfg_ini->enableTCPChkSumOffld)
+          pWlanDev->features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+-         pWlanDev->features |= NETIF_F_RXCSUM;
++      pWlanDev->features |= NETIF_F_RXCSUM;
+       hdd_set_station_ops( pAdapter->dev );
+ 
+       pWlanDev->destructor = free_netdev;
+@@ -14639,8 +14639,8 @@ static void hdd_state_info_dump(char **buf_ptr, uint16_t *size)
+ 		if (adapter->dev)
+ 			len += scnprintf(buf + len, *size - len,
+ 				"\n device name: %s", adapter->dev->name);
+-			len += scnprintf(buf + len, *size - len,
+-				"\n device_mode: %d", adapter->device_mode);
++        len += scnprintf(buf + len, *size - len,
++            "\n device_mode: %d", adapter->device_mode);
+ 		switch (adapter->device_mode) {
+ 		case WLAN_HDD_INFRA_STATION:
+ 		case WLAN_HDD_P2P_CLIENT:
+diff --git a/drivers/staging/qcacld-2.0/CORE/MAC/src/include/utilsApi.h b/drivers/staging/qcacld-2.0/CORE/MAC/src/include/utilsApi.h
+index 6b81aae9..120417a2 100644
+--- a/drivers/staging/qcacld-2.0/CORE/MAC/src/include/utilsApi.h
++++ b/drivers/staging/qcacld-2.0/CORE/MAC/src/include/utilsApi.h
+@@ -706,7 +706,7 @@ halRoundS32(tANI_S32 p)
+     else
+         k = p;
+ 
+-        return(k);
++    return(k);
+ }
+ 
+ /* New functions for endianness conversion */

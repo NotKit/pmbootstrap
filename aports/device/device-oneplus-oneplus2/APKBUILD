@@ -1,0 +1,17 @@
+pkgname="device-oneplus-oneplus2"
+pkgdesc="OnePlus 2"
+pkgver=0.1
+pkgrel=0
+url="https://postmarketos.org"
+license="MIT"
+arch="noarch"
+options="!check"
+depends="linux-oneplus-oneplus2 mkbootimg"
+source="deviceinfo"
+
+package() {
+	install -Dm644 "$srcdir"/deviceinfo \
+		"$pkgdir"/etc/deviceinfo
+}
+
+sha512sums="50f2868d0b645b0b0d45688f2311dd1cfe2b25c1db0b9fb2a49d090b01686e830fffd0fd7b60cf9de9054ba7bd8b10867bbde0600bb8d629ede3cfc7c82a4094  deviceinfo"
