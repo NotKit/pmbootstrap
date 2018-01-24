@@ -1,5 +1,5 @@
 pkgname=hildon-desktop
-pkgver=2.2.157.5
+pkgver=2.2.157.6
 pkgrel=0
 pkgdesc="Hildon desktop for Fremantle"
 arch="all"
@@ -35,4 +35,4 @@ package() {
 	cd "$builddir"
 	make DESTDIR="$pkgdir/" install
 }
-sha512sums="8274da17eb945e188a6251d7447019d1173dc44eb97645a4192c02b9a67b6875b25367039ae287be09a948d001dabbde0b6dc3a77c2f27d445f1b3b93ee252ba  hildon-desktop-2.2.157.5.tar.gz"
+sha512sums="c8d40ae74c94c490113191ab1abbb9c0b9b9cef9cd1a0c1a86eb5467f91fd3d6a78e42275714cf9e0a306fd83e1b2086cdf6f3995679bfe8c7e5a7a396fce16b  hildon-desktop-2.2.157.6.tar.gz"
